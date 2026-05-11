@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DLKS-MQTT · Secure IoT Protocol</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+  <!-- Animated background -->
+  <div class="bg-wrap">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="glass-nav">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <span class="brand-icon">🔐</span>
+        <span class="brand-name">DLKS<span class="accent">-MQTT</span></span>
+      </div>
+      <div class="nav-links">
+        <a href="#overview" class="nav-link">Overview</a>
+        <a href="#demo" class="nav-link">Live Demo</a>
+        <a href="#performance" class="nav-link">Performance</a>
+        <a href="#team" class="nav-link">Team</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero" id="overview">
+      <div class="hero-badge">GROUP · 72 · PROJECT EXHIBITION-2</div>
+      <h1 class="hero-title">
+        A Lightweight<br />
+        <span class="title-gradient">Key Sharing Protocol</span><br />
+        for Secure IoT
+      </h1>
+      <p class="hero-sub">DLKS-MQTT provides robust security — integrity, confidentiality & authenticity — without the heavy computational costs of traditional cryptography.</p>
+      <div class="hero-cta">
+        <a href="#demo" class="btn-primary">Run Live Demo</a>
+        <a href="#performance" class="btn-ghost">View Metrics</a>
+      </div>
+
+      <!-- Stat pills -->
+      <div class="stat-row">
+        <div class="stat-pill glass">
+          <span class="stat-val">0.0014 mJ</span>
+          <span class="stat-label">Energy / session</span>
+        </div>
+        <div class="stat-pill glass">
+          <span class="stat-val">0.40 s</span>
+          <span class="stat-label">Execution time</span>
+        </div>
+        <div class="stat-pill glass">
+          <span class="stat-val">60 B</span>
+          <span class="stat-label">Per-message overhead</span>
+        </div>
+        <div class="stat-pill glass">
+          <span class="stat-val">128-bit</span>
+          <span class="stat-label">Session key size</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section" id="how">
+      <div class="section-label">METHODOLOGY</div>
+      <h2 class="section-title">How DLKS-MQTT Works</h2>
+      <div class="cards-row">
+        <div class="glass-card step-card">
+          <div class="step-num">01</div>
+          <h3>Ephemeral Key Generation</h3>
+          <p>A Linear Congruential Generator (LCG) produces a unique 128-bit session key <code>K_sess</code> for every connection — no key reuse, ever.</p>
+        </div>
+        <div class="glass-card step-card">
+          <div class="step-num">02</div>
+          <h3>Minimalistic Handshake</h3>
+          <p>Security is embedded directly into standard MQTT <code>CONNECT</code> and <code>CONNACK</code> messages, adding zero extra round-trips.</p>
+        </div>
+        <div class="glass-card step-card">
+          <div class="step-num">03</div>
+          <h3>Cryptographic Integrity</h3>
+          <p>BLAKE2s hashing verifies data integrity per message. Encrypted payloads ensure confidentiality throughout the session.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Handshake steps -->
+    <section class="section">
+      <div class="section-label">PROTOCOL FLOW</div>
+      <h2 class="section-title">3-Step Handshake</h2>
+      <div class="timeline">
+        <div class="timeline-item glass-card">
+          <div class="tl-icon">📡</div>
+          <div class="tl-body">
+            <h3>Device Initiation</h3>
+            <p>The device sends a <code>CONNECT</code> message carrying <code>K_sess</code>, its unique device ID (<code>ID_dev</code>), and a random Nonce (N) to block replay attacks.</p>
+          </div>
+        </div>
+        <div class="tl-arrow">↓</div>
+        <div class="timeline-item glass-card">
+          <div class="tl-icon">🛡️</div>
+          <div class="tl-body">
+            <h3>Broker Verification</h3>
+            <p>The broker decrypts the payload, validates the nonce, and authenticates the device against its known identity.</p>
+          </div>
+        </div>
+        <div class="tl-arrow">↓</div>
+        <div class="timeline-item glass-card">
+          <div class="tl-icon">✅</div>
+          <div class="tl-body">
+            <h3>Session Establishment</h3>
+            <p>The broker replies with a modified <code>CONNACK</code> including authentication status and a timestamp — secure channel is live.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live Demo -->
+    <section class="section" id="demo">
+      <div class="section-label">INTERACTIVE</div>
+      <h2 class="section-title">Live Handshake Demo</h2>
+      <p class="section-desc">Simulate the full DLKS-MQTT protocol with a real device ID below.</p>
+
+      <div class="demo-wrap glass-card">
+        <div class="demo-input-row">
+          <input class="glass-input" id="deviceId" type="text" placeholder="Enter Device ID (e.g. DEV_001)" />
+          <button class="btn-primary" id="startBtn" onclick="runHandshake()">Initiate Handshake</button>
+          <button class="btn-ghost" onclick="clearDemo()">Clear</button>
+        </div>
+
+        <div class="steps-panel" id="stepsPanel">
+          <div class="step-block" id="step1" style="display:none">
+            <div class="step-header">
+              <span class="step-badge">STEP 1</span>
+              <span class="step-title-sm">Device Initiation — CONNECT</span>
+              <span class="step-status" id="s1status"></span>
+            </div>
+            <pre class="glass-code" id="s1output"></pre>
+          </div>
+          <div class="step-block" id="step2" style="display:none">
+            <div class="step-header">
+              <span class="step-badge">STEP 2</span>
+              <span class="step-title-sm">Broker Verification</span>
+              <span class="step-status" id="s2status"></span>
+            </div>
+            <pre class="glass-code" id="s2output"></pre>
+          </div>
+          <div class="step-block" id="step3" style="display:none">
+            <div class="step-header">
+              <span class="step-badge">STEP 3</span>
+              <span class="step-title-sm">Session Establishment — CONNACK</span>
+              <span class="step-status" id="s3status"></span>
+            </div>
+            <pre class="glass-code" id="s3output"></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active sessions -->
+      <div class="glass-card sessions-card" style="margin-top:2rem">
+        <div class="sessions-header">
+          <h3>Active Sessions</h3>
+          <button class="btn-ghost btn-sm" onclick="loadSessions()">Refresh</button>
+        </div>
+        <div id="sessionsTable">
+          <p class="empty-msg">No active sessions yet.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Performance -->
+    <section class="section" id="performance">
+      <div class="section-label">BENCHMARKS</div>
+      <h2 class="section-title">Performance Evaluation</h2>
+
+      <div class="perf-grid">
+        <div class="glass-card perf-card">
+          <div class="perf-icon">⚡</div>
+          <h3>Energy Efficiency</h3>
+          <div class="bar-wrap">
+            <div class="bar-row">
+              <span class="bar-label">DLKS-MQTT</span>
+              <div class="bar-track"><div class="bar-fill bar-good" style="width:79%"></div></div>
+              <span class="bar-val">0.0014 mJ</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">SMQTT</span>
+              <div class="bar-track"><div class="bar-fill bar-bad" style="width:100%"></div></div>
+              <span class="bar-val">0.00177 mJ</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card perf-card">
+          <div class="perf-icon">⏱️</div>
+          <h3>Execution Time</h3>
+          <div class="bar-wrap">
+            <div class="bar-row">
+              <span class="bar-label">DLKS-MQTT</span>
+              <div class="bar-track"><div class="bar-fill bar-good" style="width:14%"></div></div>
+              <span class="bar-val">0.40 s</span>
+            </div>
+            <div class="bar-row">
+              <span class="bar-label">SMQTT</span>
+              <div class="bar-track"><div class="bar-fill bar-bad" style="width:100%"></div></div>
+              <span class="bar-val">2.80 s</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card perf-card perf-card-full">
+          <div class="perf-icon">📦</div>
+          <h3>Communication Overhead</h3>
+          <div class="overhead-display">
+            <span class="overhead-num">60</span>
+            <span class="overhead-unit">bytes per message</span>
+          </div>
+          <p>Minimized overhead by embedding security directly into existing MQTT control packets — no extra protocol messages.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team -->
+    <section class="section" id="team">
+      <div class="section-label">CONTRIBUTORS</div>
+      <h2 class="section-title">Group Members</h2>
+      <div class="team-grid">
+        <div class="glass-card team-card">
+          <div class="avatar">VS</div>
+          <div class="member-name">Vanya Singhal</div>
+          <div class="member-id">24BCY10046</div>
+        </div>
+        <div class="glass-card team-card">
+          <div class="avatar">AV</div>
+          <div class="member-name">Anant Verma</div>
+          <div class="member-id">24BCY10402</div>
+        </div>
+        <div class="glass-card team-card">
+          <div class="avatar">MV</div>
+          <div class="member-name">Meet Vichare</div>
+          <div class="member-id">24BCY10406</div>
+        </div>
+        <div class="glass-card team-card">
+          <div class="avatar">LM</div>
+          <div class="member-name">Laksh Mahajan</div>
+          <div class="member-id">24BCY10255</div>
+        </div>
+        <div class="glass-card team-card">
+          <div class="avatar">JS</div>
+          <div class="member-name">Jishnu Sanjeev</div>
+          <div class="member-id">24BCY10094</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass-footer">
+      <p>DLKS-MQTT · Group 72 · Project Exhibition 2</p>
+      <p class="footer-sub">Dynamic Lightweight Key Sharing for MQTT — Securing the IoT Edge</p>
+    </footer>
+
+  </main>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
